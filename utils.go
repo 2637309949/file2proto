@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"path/filepath"
@@ -29,7 +30,7 @@ func ensureOutputFile(dir string) (string, error) {
 	filePath := path.Join(targetDir, targetFile)
 	_, err = os.Stat(filePath)
 	if !os.IsNotExist(err) {
-		return "", err
+		return "", fmt.Errorf("output file %v already exists", filePath)
 	}
 	return filePath, nil
 }

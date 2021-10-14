@@ -28,7 +28,7 @@ func (to *go2proto) Transform(uri string) ([]*message, error) {
 		log.Fatalf("error fetching packages: %s", err)
 		return []*message{}, err
 	}
-	msgs := getMessages(pkgs)
+	msgs := packagesToMessages(pkgs)
 	return msgs, nil
 }
 
@@ -36,8 +36,8 @@ func (to *go2proto) Check(uri string) bool {
 	if strings.Contains(uri, ".go") {
 		return true
 	}
-	s, _ := os.Stat(uri)
-	if s.IsDir() {
+	s, err := os.Stat(uri)
+	if err == nil && s.IsDir() {
 		files, _ := ioutil.ReadDir(uri)
 		for _, f := range files {
 			if strings.Contains(f.Name(), ".go") {
@@ -45,7 +45,7 @@ func (to *go2proto) Check(uri string) bool {
 			}
 		}
 	}
-	return true
+	return false
 }
 
 func loadPackages(pwd string, pkgs []string) ([]*packages.Package, error) {
@@ -75,7 +75,7 @@ func loadPackages(pwd string, pkgs []string) ([]*packages.Package, error) {
 	return packages, nil
 }
 
-func getMessages(pkgs []*packages.Package) []*message {
+func packagesToMessages(pkgs []*packages.Package) []*message {
 	var out []*message
 	seen := map[string]struct{}{}
 	for _, p := range pkgs {
@@ -94,7 +94,7 @@ func getMessages(pkgs []*packages.Package) []*message {
 			}
 			if s, ok := t.Type().Underlying().(*types.Struct); ok {
 				seen[t.Name()] = struct{}{}
-				out = appendMessage(out, t, s)
+				out = appendPackagesMessage(out, t, s)
 			}
 		}
 	}
@@ -102,7 +102,7 @@ func getMessages(pkgs []*packages.Package) []*message {
 	return out
 }
 
-func appendMessage(out []*message, t types.Object, s *types.Struct) []*message {
+func appendPackagesMessage(out []*message, t types.Object, s *types.Struct) []*message {
 	msg := &message{
 		Name:   t.Name(),
 		Fields: []*field{},
@@ -115,7 +115,7 @@ func appendMessage(out []*message, t types.Object, s *types.Struct) []*message {
 		}
 		newField := &field{
 			Name:       toProtoFieldName(f.Name()),
-			TypeName:   toProtoFieldTypeName(f),
+			TypeName:   toProtoFieldTypeNameByVar(f),
 			IsRepeated: isRepeated(f),
 			Order:      i + 1,
 		}
@@ -125,7 +125,7 @@ func appendMessage(out []*message, t types.Object, s *types.Struct) []*message {
 	return out
 }
 
-func toProtoFieldTypeName(f *types.Var) string {
+func toProtoFieldTypeNameByVar(f *types.Var) string {
 	switch f.Type().Underlying().(type) {
 	case *types.Basic:
 		name := f.Type().String()

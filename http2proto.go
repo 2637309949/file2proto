@@ -15,7 +15,7 @@ func (to *http2proto) Check(uri string) bool {
 	if strings.Contains(uri, "http://") || strings.Contains(uri, "https://") {
 		return true
 	}
-	return true
+	return false
 }
 
 func init() {

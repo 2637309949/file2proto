@@ -17,8 +17,8 @@ func (to *json2proto) Check(uri string) bool {
 	if strings.Contains(uri, ".json") {
 		return true
 	}
-	s, _ := os.Stat(uri)
-	if s.IsDir() {
+	s, err := os.Stat(uri)
+	if err == nil && s.IsDir() {
 		files, _ := ioutil.ReadDir(uri)
 		for _, f := range files {
 			if strings.Contains(f.Name(), ".json") {
@@ -26,7 +26,7 @@ func (to *json2proto) Check(uri string) bool {
 			}
 		}
 	}
-	return true
+	return false
 }
 
 func init() {

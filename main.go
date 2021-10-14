@@ -4,11 +4,13 @@ import (
 	"flag"
 	"log"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
-	inputFile  = flag.String("i", "", "Fully qualified path of packages to analyse")
-	outputFile = flag.String("o", ".", "Protobuf output file.")
+	inputFile = flag.String("i", "", "Fully qualified path of packages to analyse")
+	output    = flag.String("o", ".", "Protobuf output file.")
 )
 
 func main() {
@@ -19,16 +21,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	file, err := ensureOutputFile(*outputFile)
+	outputFile, err := ensureOutputFile(*output)
 	if err != nil {
 		log.Fatalf("ensureOutputFile error: %s", err)
 	}
-	*outputFile = file
 
-	err = buildFile2proto(*inputFile, *outputFile)
-
+	err = buildFile2proto(*inputFile, outputFile)
 	if err != nil {
 		log.Fatalf("error buildFile2proto: %s", err)
 	}
-	log.Printf("output file written to %v\n", *outputFile)
+	log.Printf("output file written to %v\n", outputFile)
 }

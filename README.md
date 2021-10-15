@@ -1,4 +1,4 @@
-file2proto, a utility that can convert struct, mysql, JSON and HTTP into proto
+file2proto, a utility that can convert struct, mysql, json and http into proto
 
 ### Install
 ```shell

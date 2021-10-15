@@ -23,7 +23,7 @@ func (to *go2proto) Transform(uri string) ([]*message, error) {
 		log.Fatalf("error Getwd: %s", err)
 		return []*message{}, err
 	}
-	pkgs, err := loadPackages(pwd, []string{uri})
+	pkgs, err := loadPackages(pwd, uri)
 	if err != nil {
 		log.Fatalf("error fetching packages: %s", err)
 		return []*message{}, err
@@ -48,14 +48,14 @@ func (to *go2proto) Check(uri string) bool {
 	return false
 }
 
-func loadPackages(pwd string, pkgs []string) ([]*packages.Package, error) {
+func loadPackages(pwd string, pkg string) ([]*packages.Package, error) {
 	fset := token.NewFileSet()
 	cfg := &packages.Config{
 		Dir:  pwd,
 		Mode: packages.NeedTypes | packages.NeedTypesSizes | packages.NeedSyntax | packages.NeedTypesInfo,
 		Fset: fset,
 	}
-	packages, err := packages.Load(cfg, pkgs...)
+	packages, err := packages.Load(cfg, pkg)
 	if err != nil {
 		return nil, err
 	}

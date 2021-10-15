@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"sort"
 	"strings"
@@ -35,7 +34,6 @@ func tablesToMessages(tables []*schemas.Table) []*message {
 			continue
 		}
 		seen[t.Name] = struct{}{}
-		fmt.Println(t.Name)
 		out = appendTablesMessage(out, t)
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Name < out[j].Name })

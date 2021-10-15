@@ -68,7 +68,7 @@ func rspInterToMessages(name string, objs map[string]interface{}) (out []*messag
 			newField.TypeName = "bool"
 		default:
 			rspBytes, err := json.Marshal(v)
-			if err != nil || string(rspBytes) == "{}" || string(rspBytes) == "null" {
+			if err != nil || string(rspBytes) == "{}" || string(rspBytes) == "[]" || string(rspBytes) == "null" {
 				continue
 			}
 			if strings.HasPrefix(string(rspBytes), "{") {

@@ -32,6 +32,6 @@ file2proto -i ./test.json
 ```
 
 ```shell
-file2proto -i "https://silkroad.csdn.net/api/v2/assemble/list/channel/search_hot_word?channel_name=pc_hot_word&size=10&user_name=u013571243&platform=pc&imei=10_19003314510-1632359899251-804293&toolbarSearchExt=%7B%22landingWord%22%3A%5B%5D%2C%22queryWord%22%3A%22%22%2C%22tag%22%3A%5B%5D%2C%22title%22%3A%22Git%E5%86%B2%E7%AA%81%EF%BC%9Acommit+your+changes+or+stash+them+before+you+can+merge.%22%7D"
+file2proto -i "https://help.aliyun.com/api/v2/recommend/doc?idList=209974&limit=6&isMobile=false"
 2021/10/15 23:16:32 output file written to messages.proto
 ```
